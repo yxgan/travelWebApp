@@ -9,7 +9,7 @@ import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/travelWebApp">
       <div className="App">
         <Navbar />
         <Routes>
