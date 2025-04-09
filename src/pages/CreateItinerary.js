@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Box, Typography, Snackbar, CircularProgress } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { saveItinerary, getItineraryById } from '../services/itineraryService';
+import { ref, set } from 'firebase/database';
+import { db } from '../firebase/config';
 
 function CreateItinerary() {
   const navigate = useNavigate();
