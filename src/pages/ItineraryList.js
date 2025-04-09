@@ -9,9 +9,13 @@ function ItineraryList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadItineraries = () => {
-      const data = getItineraries();
-      setItineraries(data);
+    const loadItineraries = async () => {
+      try {
+        const data = await getItineraries();
+        setItineraries(data);
+      } catch (error) {
+        console.error('Error loading itineraries:', error);
+      }
     };
     loadItineraries();
   }, []);

@@ -24,18 +24,10 @@ function CreateItinerary() {
     }
   }, [id]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (id) {
-        const itineraries = JSON.parse(localStorage.getItem('itineraries') || '[]');
-        const updatedItineraries = itineraries.map(i => 
-          i.id === Number(id) ? { ...itinerary } : i
-        );
-        localStorage.setItem('itineraries', JSON.stringify(updatedItineraries));
-      } else {
-        saveItinerary(itinerary);
-      }
+      await saveItinerary(itinerary);
       setOpen(true);
       setTimeout(() => {
         navigate('/itineraries');
