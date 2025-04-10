@@ -4,6 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { saveItinerary, getItineraryById } from '../services/itineraryService';
 import { ref, set } from 'firebase/database';
 import { db } from '../firebase/config';
+import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Divider } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 function CreateItinerary() {
   const navigate = useNavigate();
@@ -16,6 +19,8 @@ function CreateItinerary() {
     endDate: '',
     activities: []
   });
+  const [newActivity, setNewActivity] = useState({ name: '', location: '' });
+  const [showActivityForm, setShowActivityForm] = useState(false);
 
   useEffect(() => {
     const fetchItinerary = async () => {
@@ -63,6 +68,23 @@ function CreateItinerary() {
     } catch (error) {
       console.error('Error writing test data:', error);
     }
+  };
+
+  const handleAddActivity = () => {
+    if (newActivity.name && newActivity.location) {
+      setItinerary({
+        ...itinerary,
+        activities: [...(itinerary.activities || []), newActivity]
+      });
+      setNewActivity({ name: '', location: '' });
+      setShowActivityForm(false);
+    }
+  };
+
+  const handleRemoveActivity = (index) => {
+    const updatedActivities = [...itinerary.activities];
+    updatedActivities.splice(index, 1);
+    setItinerary({ ...itinerary, activities: updatedActivities });
   };
 
   if (loading) {
@@ -119,6 +141,67 @@ function CreateItinerary() {
         >
           {id ? 'Update Itinerary' : 'Create Itinerary'}
         </Button>
+      </Box>
+      <Box sx={{ mt: 4, mb: 2 }}>
+        <Typography variant="h6">Activities</Typography>
+        <Button
+          startIcon={<AddIcon />}
+          onClick={() => setShowActivityForm(true)}
+          sx={{ mt: 1 }}
+        >
+          Add Activity
+        </Button>
+        
+        {showActivityForm && (
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Activity Name"
+              value={newActivity.name}
+              onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              label="Location"
+              value={newActivity.location}
+              onChange={(e) => setNewActivity({ ...newActivity, location: e.target.value })}
+              margin="normal"
+            />
+            <Button
+              variant="contained"
+              onClick={handleAddActivity}
+              sx={{ mt: 1, mr: 1 }}
+            >
+              Add
+            </Button>
+            <Button
+              onClick={() => setShowActivityForm(false)}
+              sx={{ mt: 1 }}
+            >
+              Cancel
+            </Button>
+          </Box>
+        )}
+        
+        <List>
+          {itinerary.activities && itinerary.activities.map((activity, index) => (
+            <React.Fragment key={index}>
+              <ListItem>
+                <ListItemText
+                  primary={activity.name}
+                  secondary={activity.location}
+                />
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" onClick={() => handleRemoveActivity(index)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+              {index < itinerary.activities.length - 1 && <Divider />}
+            </React.Fragment>
+          ))}
+        </List>
       </Box>
       <Snackbar
         open={open}

@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import ItineraryList from './pages/ItineraryList';
 import CreateItinerary from './pages/CreateItinerary';
-import ItineraryDetail from './components/ItineraryDetail';
+import ViewItinerary from './components/ViewItinerary';
 import './App.css';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/itineraries" element={<ItineraryList />} />
           <Route path="/create" element={<CreateItinerary />} />
-          <Route path="/itinerary/:id" element={<ItineraryDetail />} />
+          <Route path="/itinerary/:id" element={<ViewItinerary />} />
           <Route path="/edit/:id" element={<CreateItinerary />} />
         </Routes>
       </div>

@@ -10,8 +10,16 @@ import {
   Button,
   CircularProgress,
   Alert,
-  Box
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Collapse,
+  IconButton,
+  Divider
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { getItineraries } from '../services/itineraryService';
 import { format } from 'date-fns';
 
@@ -19,6 +27,7 @@ function ItineraryList() {
   const [itineraries, setItineraries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedId, setExpandedId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +53,10 @@ function ItineraryList() {
 
   const handleEdit = (id) => {
     navigate(`/edit/${id}`);
+  };
+
+  const handleExpandClick = (id) => {
+    setExpandedId(expandedId === id ? null : id);
   };
 
   if (loading) {
@@ -94,6 +107,36 @@ function ItineraryList() {
                     {format(new Date(itinerary.startDate), 'MMM dd, yyyy')} - 
                     {format(new Date(itinerary.endDate), 'MMM dd, yyyy')}
                   </Typography>
+                  
+                  <IconButton
+                    onClick={() => handleExpandClick(itinerary.id)}
+                    sx={{ mt: 1 }}
+                  >
+                    {expandedId === itinerary.id ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  </IconButton>
+                  
+                  <Collapse in={expandedId === itinerary.id} timeout="auto" unmountOnExit>
+                    <List dense>
+                      {itinerary.activities && itinerary.activities.length > 0 ? (
+                        itinerary.activities.map((activity, index) => (
+                          <React.Fragment key={index}>
+                            <ListItem>
+                              <ListItemText
+                                primary={activity.name}
+                                secondary={activity.location}
+                              />
+                            </ListItem>
+                            {index < itinerary.activities.length - 1 && <Divider />}
+                          </React.Fragment>
+                        ))
+                      ) : (
+                        <ListItem>
+                          <ListItemText primary="No activities added yet" />
+                        </ListItem>
+                      )}
+                    </List>
+                  </Collapse>
+                  
                   {itinerary.createdAt && (
                     <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
                       Created: {format(new Date(itinerary.createdAt), 'MMM dd, yyyy')}
