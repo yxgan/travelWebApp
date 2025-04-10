@@ -1,16 +1,45 @@
 import React from 'react';
+import { AppBar, Toolbar, IconButton, Box, Tooltip } from '@mui/material';
 import { Link } from 'react-router-dom';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
+import HomeIcon from '@mui/icons-material/Home';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function Navbar() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Button color="inherit" component={Link} to="/">Home</Button>
-        <Button color="inherit" component={Link} to="/itineraries">My Itineraries</Button>
-        <Button color="inherit" component={Link} to="/create">Create New</Button>
+        <Tooltip title="Home">
+          <IconButton
+            component={Link}
+            to="/"
+            color="inherit"
+            aria-label="home"
+            sx={{ mr: 2 }}
+          >
+            <HomeIcon />
+          </IconButton>
+        </Tooltip>
+        <Box sx={{ flexGrow: 1, display: 'flex', gap: 2, alignItems: 'center' }}>
+          <Tooltip title="My Itineraries">
+            <IconButton
+              component={Link}
+              to="/itineraries"
+              color="inherit"
+            >
+              <ListAltIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Create New">
+            <IconButton
+              component={Link}
+              to="/create"
+              color="inherit"
+            >
+              <AddCircleIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Toolbar>
     </AppBar>
   );
