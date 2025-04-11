@@ -118,8 +118,7 @@ function ItineraryList() {
                     {itinerary.destination}
                   </Typography>
                   <Typography color="textSecondary">
-                    {format(new Date(itinerary.startDate), 'MMM dd, yyyy')} - 
-                    {format(new Date(itinerary.endDate), 'MMM dd, yyyy')}
+                    {format(new Date(itinerary.startDate), 'MMM dd, yyyy')} - {format(new Date(itinerary.endDate), 'MMM dd, yyyy')}
                   </Typography>
                   
                   <IconButton
