@@ -22,6 +22,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { getItineraries } from '../services/itineraryService';
 import { format } from 'date-fns';
+import { useSearch } from '../context/SearchContext';
 
 function ItineraryList() {
   const [itineraries, setItineraries] = useState([]);
@@ -29,6 +30,7 @@ function ItineraryList() {
   const [error, setError] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const navigate = useNavigate();
+  const { searchQuery } = useSearch();
 
   useEffect(() => {
     const loadItineraries = async () => {
@@ -58,6 +60,18 @@ function ItineraryList() {
   const handleExpandClick = (id) => {
     setExpandedId(expandedId === id ? null : id);
   };
+
+  const filteredItineraries = itineraries.filter(itinerary => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      itinerary.destination.toLowerCase().includes(searchLower) ||
+      (itinerary.activities && 
+       itinerary.activities.some(activity => 
+         activity.name.toLowerCase().includes(searchLower) ||
+         activity.location.toLowerCase().includes(searchLower)
+       ))
+    );
+  });
 
   if (loading) {
     return (
@@ -90,13 +104,13 @@ function ItineraryList() {
         </Button>
       </Box>
       
-      {itineraries.length === 0 ? (
+      {filteredItineraries.length === 0 ? (
         <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
-          No itineraries found. Create your first travel plan!
+          {searchQuery ? 'No matching itineraries found.' : 'No itineraries found. Create your first travel plan!'}
         </Typography>
       ) : (
         <Grid container spacing={3}>
-          {itineraries.map((itinerary) => (
+          {filteredItineraries.map((itinerary) => (
             <Grid item xs={12} sm={6} md={4} key={itinerary.id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <CardContent sx={{ flexGrow: 1 }}>
